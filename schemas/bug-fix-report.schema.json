@@ -1,0 +1,135 @@
+﻿{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentskills.io/schemas/bug-fix-lifecycle/fix-report.schema.json",
+  "title": "Bug Fix Resolution Report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "reportVersion",
+    "mode",
+    "title",
+    "status",
+    "severity",
+    "resolutionOwner",
+    "context",
+    "expectedBehavior",
+    "observedFailure",
+    "rootCause",
+    "confirmationTestBeforeFix",
+    "codeChanges",
+    "regressionProtection",
+    "documentationUpdates",
+    "verificationAfterFix",
+    "residualRiskAndFollowUp"
+  ],
+  "properties": {
+    "reportVersion": { "type": "string" },
+    "mode": { "const": "approved-fix" },
+    "title": { "type": "string", "minLength": 3 },
+    "status": { "enum": ["resolved", "mitigated", "blocked"] },
+    "severity": { "enum": ["critical", "high", "medium", "low"] },
+    "resolutionOwner": { "type": "string", "minLength": 1 },
+    "context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["issueSummary", "affectedArea", "sourceOfTruthReviewed", "repositoryConventionsUsed"],
+      "properties": {
+        "issueSummary": { "type": "string", "minLength": 1 },
+        "affectedArea": { "type": "string", "minLength": 1 },
+        "sourceOfTruthReviewed": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "repositoryConventionsUsed": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "expectedBehavior": { "type": "string", "minLength": 1 },
+    "observedFailure": { "type": "string", "minLength": 1 },
+    "rootCause": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["technicalCause", "triggerCondition", "whyItEscapedEarlier"],
+      "properties": {
+        "technicalCause": { "type": "string", "minLength": 1 },
+        "triggerCondition": { "type": "string", "minLength": 1 },
+        "whyItEscapedEarlier": { "type": "string", "minLength": 1 }
+      }
+    },
+    "confirmationTestBeforeFix": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "location", "result", "notes"],
+      "properties": {
+        "type": { "enum": ["unit", "integration", "api", "component", "e2e", "manual"] },
+        "location": { "type": "string", "minLength": 1 },
+        "result": { "enum": ["failed", "blocked"] },
+        "notes": { "type": "string", "minLength": 1 }
+      }
+    },
+    "codeChanges": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["filesChanged", "fixStrategy", "riskNotes"],
+      "properties": {
+        "filesChanged": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "fixStrategy": { "type": "string", "minLength": 1 },
+        "riskNotes": { "type": "string", "minLength": 1 }
+      }
+    },
+    "regressionProtection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["testsUpdated", "coverageValidation", "regressionChecks"],
+      "properties": {
+        "testsUpdated": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "coverageValidation": { "type": "string", "minLength": 1 },
+        "regressionChecks": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "documentationUpdates": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["requirements", "technicalDocs", "diagramsOrRunbooks", "helpPagesOrReadme", "changelog"],
+      "properties": {
+        "requirements": { "type": "string", "minLength": 1 },
+        "technicalDocs": { "type": "string", "minLength": 1 },
+        "diagramsOrRunbooks": { "type": "string", "minLength": 1 },
+        "helpPagesOrReadme": { "type": "string", "minLength": 1 },
+        "changelog": { "type": "string", "minLength": 1 }
+      }
+    },
+    "verificationAfterFix": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["confirmationTestResult", "additionalValidation"],
+      "properties": {
+        "confirmationTestResult": { "enum": ["passed", "blocked"] },
+        "additionalValidation": { "type": "string", "minLength": 1 }
+      }
+    },
+    "residualRiskAndFollowUp": { "type": "string", "minLength": 1 },
+    "trackerMetadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "labels": { "type": "array", "items": { "type": "string" } },
+        "components": { "type": "array", "items": { "type": "string" } },
+        "projectKey": { "type": "string" },
+        "teamKey": { "type": "string" }
+      }
+    }
+  }
+}

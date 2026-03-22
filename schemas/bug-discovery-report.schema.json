@@ -1,0 +1,94 @@
+﻿{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentskills.io/schemas/bug-fix-lifecycle/discovery-report.schema.json",
+  "title": "Bug Discovery Report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "reportVersion",
+    "mode",
+    "title",
+    "status",
+    "severity",
+    "priority",
+    "defectDescription",
+    "expectedBehavior",
+    "evidence",
+    "environment",
+    "reproduction",
+    "actualResult",
+    "scopeAndImpact",
+    "testAndDetectionGap",
+    "recommendedNextStep"
+  ],
+  "properties": {
+    "reportVersion": { "type": "string" },
+    "mode": { "const": "report-only" },
+    "title": { "type": "string", "minLength": 3 },
+    "status": { "enum": ["new", "triaged", "approved", "blocked"] },
+    "severity": { "enum": ["critical", "high", "medium", "low"] },
+    "priority": { "enum": ["p0", "p1", "p2", "p3"] },
+    "defectDescription": { "type": "string", "minLength": 1 },
+    "expectedBehavior": { "type": "string", "minLength": 1 },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "requirementReference", "attachments"],
+      "properties": {
+        "source": { "type": "string", "minLength": 1 },
+        "requirementReference": { "type": "string", "minLength": 1 },
+        "attachments": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "environment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["versionOrCommit", "runtimeOrPlatform", "accountOrPersona"],
+      "properties": {
+        "versionOrCommit": { "type": "string" },
+        "runtimeOrPlatform": { "type": "string" },
+        "accountOrPersona": { "type": "string" }
+      }
+    },
+    "reproduction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["steps", "reproduced", "notes"],
+      "properties": {
+        "steps": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "reproduced": { "type": ["boolean", "null"] },
+        "notes": { "type": "string" }
+      }
+    },
+    "actualResult": { "type": "string", "minLength": 1 },
+    "scopeAndImpact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["affectedArea", "userImpact", "riskIfUnchanged"],
+      "properties": {
+        "affectedArea": { "type": "string", "minLength": 1 },
+        "userImpact": { "type": "string", "minLength": 1 },
+        "riskIfUnchanged": { "type": "string", "minLength": 1 }
+      }
+    },
+    "testAndDetectionGap": { "type": "string", "minLength": 1 },
+    "recommendedNextStep": { "type": "string", "minLength": 1 },
+    "trackerMetadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "labels": { "type": "array", "items": { "type": "string" } },
+        "components": { "type": "array", "items": { "type": "string" } },
+        "projectKey": { "type": "string" },
+        "teamKey": { "type": "string" }
+      }
+    }
+  }
+}

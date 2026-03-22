@@ -1,0 +1,72 @@
+﻿{
+  "reportVersion": "1.0.0",
+  "mode": "approved-fix",
+  "title": "Checkout accepts an impossible birth date",
+  "status": "resolved",
+  "severity": "high",
+  "resolutionOwner": "checkout-platform",
+  "context": {
+    "issueSummary": "Guest checkout accepted a future birth date and created an invalid order.",
+    "affectedArea": "checkout",
+    "sourceOfTruthReviewed": [
+      "docs/checkout.md",
+      "src/checkout/validation.ts"
+    ],
+    "repositoryConventionsUsed": [
+      "Vitest for unit tests",
+      "docs/ for product documentation",
+      "CHANGELOG.md for release notes"
+    ]
+  },
+  "expectedBehavior": "Checkout must reject impossible birth dates and display a validation error before submission.",
+  "observedFailure": "A future birth date bypassed validation and created a persisted order record.",
+  "rootCause": {
+    "technicalCause": "Date validation only checked for presence and format, not whether the value was in a valid range.",
+    "triggerCondition": "Users entered a valid ISO date that represented a future date.",
+    "whyItEscapedEarlier": "The test suite covered empty and malformed values but not semantic date validation."
+  },
+  "confirmationTestBeforeFix": {
+    "type": "unit",
+    "location": "src/checkout/validation.test.ts",
+    "result": "failed",
+    "notes": "A new test asserting future dates are rejected failed against the old implementation."
+  },
+  "codeChanges": {
+    "filesChanged": [
+      "src/checkout/validation.ts",
+      "src/checkout/validation.test.ts",
+      "docs/checkout.md",
+      "CHANGELOG.md"
+    ],
+    "fixStrategy": "Added an upper-bound date guard in shared checkout validation and tightened the error path in the form layer.",
+    "riskNotes": "Low risk outside checkout because the helper is only used by the checkout flow."
+  },
+  "regressionProtection": {
+    "testsUpdated": [
+      "src/checkout/validation.test.ts"
+    ],
+    "coverageValidation": "node scripts/verify-coverage.js --coverage coverage/coverage-summary.json --files src/checkout/validation.ts",
+    "regressionChecks": [
+      "npm run test -- checkout validation",
+      "manual checkout smoke test in staging"
+    ]
+  },
+  "documentationUpdates": {
+    "requirements": "Updated validation note in docs/checkout.md.",
+    "technicalDocs": "No separate technical doc update required.",
+    "diagramsOrRunbooks": "Not needed.",
+    "helpPagesOrReadme": "Not needed.",
+    "changelog": "Added an entry for the checkout validation fix."
+  },
+  "verificationAfterFix": {
+    "confirmationTestResult": "passed",
+    "additionalValidation": "Regression checks passed and the staging form now blocks future dates with a clear validation message."
+  },
+  "residualRiskAndFollowUp": "Consider extending semantic date validation coverage to profile editing and account onboarding flows.",
+  "trackerMetadata": {
+    "labels": ["bug", "checkout", "resolved"],
+    "components": ["web-checkout"],
+    "projectKey": "CHK",
+    "teamKey": "CHECKOUT"
+  }
+}

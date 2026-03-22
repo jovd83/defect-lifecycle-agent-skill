@@ -1,0 +1,45 @@
+﻿{
+  "reportVersion": "1.0.0",
+  "mode": "report-only",
+  "title": "Checkout accepts an impossible birth date",
+  "status": "triaged",
+  "severity": "high",
+  "priority": "p1",
+  "defectDescription": "The checkout form accepts a birth date in the future and completes the order without validation.",
+  "expectedBehavior": "The form should reject impossible birth dates and block submission until the input is corrected.",
+  "evidence": {
+    "source": "user report",
+    "requirementReference": "checkout validation rules in docs/checkout.md",
+    "attachments": [
+      "artifacts/screenshots/checkout-future-dob.png"
+    ]
+  },
+  "environment": {
+    "versionOrCommit": "a1b2c3d",
+    "runtimeOrPlatform": "Chrome 124 on Windows 11",
+    "accountOrPersona": "guest checkout"
+  },
+  "reproduction": {
+    "steps": [
+      "Open checkout",
+      "Enter a birth date one year in the future",
+      "Submit the form"
+    ],
+    "reproduced": true,
+    "notes": "Issue reproduces consistently in local and staging environments."
+  },
+  "actualResult": "The form submits successfully and the order is created with invalid customer data.",
+  "scopeAndImpact": {
+    "affectedArea": "checkout",
+    "userImpact": "Invalid orders can be submitted and downstream systems receive bad customer records.",
+    "riskIfUnchanged": "Operational cleanup and possible compliance issues due to invalid personal data."
+  },
+  "testAndDetectionGap": "Existing happy-path tests cover required-field validation but not impossible date values.",
+  "recommendedNextStep": "Approve an application-layer validation fix and add regression coverage for future and malformed dates.",
+  "trackerMetadata": {
+    "labels": ["bug", "checkout", "validation"],
+    "components": ["web-checkout"],
+    "projectKey": "CHK",
+    "teamKey": "CHECKOUT"
+  }
+}

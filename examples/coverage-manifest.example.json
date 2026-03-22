@@ -1,0 +1,9 @@
+﻿{
+  "coverageFile": "coverage/coverage-summary.json",
+  "threshold": 85,
+  "metrics": ["lines", "branches", "functions", "statements"],
+  "files": [
+    "src/checkout/form.ts",
+    "src/checkout/validation.ts"
+  ]
+}

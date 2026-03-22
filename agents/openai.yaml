@@ -1,0 +1,3 @@
+﻿display_name: Defect Lifecycle Agent Skill
+short_description: Report defects or implement approved bug fixes with traceable testing, schemas, and tracker-ready drafts.
+default_prompt: Use $bug-fix-lifecycle to report a newly discovered bug or to fix an approved defect with a failing confirmation test, regression checks, machine-readable outputs, and a structured tracker-ready report.

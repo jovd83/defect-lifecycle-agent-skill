@@ -1,0 +1,17 @@
+﻿{
+  "name": "defect-lifecycle-agent-skill",
+  "version": "2.1.0",
+  "description": "AgentSkill for reporting defects and implementing approved bug fixes with traceable verification and tracker-ready exports.",
+  "license": "MIT",
+  "private": true,
+  "type": "commonjs",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "check:coverage": "node scripts/verify-coverage.js",
+    "export:tracker": "node scripts/export-tracker-artifact.js",
+    "validate:skill": "node scripts/validate-skill.js",
+    "test": "node --test tests/*.test.js"
+  }
+}
