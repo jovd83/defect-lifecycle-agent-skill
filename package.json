@@ -1,4 +1,4 @@
-﻿{
+{
   "name": "defect-lifecycle-agent-skill",
   "version": "2.1.0",
   "description": "AgentSkill for reporting defects and implementing approved bug fixes with traceable verification and tracker-ready exports.",
