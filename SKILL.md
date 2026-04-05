@@ -1,4 +1,4 @@
-﻿---
+---
 name: bug-fix-lifecycle
 description: Use when Codex must report a newly discovered defect, implement an approved bug fix, or harden regression coverage and documentation around a known bug. This skill enforces repository-aware bug intake, failing confirmation tests before fixes, scoped verification, documentation updates when warranted, and a structured resolution report.
 metadata:
@@ -148,6 +148,13 @@ Do not automatically promote runtime findings into persistent storage. Persist o
 - If coverage JSON is unavailable, say so plainly instead of pretending the validator ran.
 - If docs or diagrams do not exist in the repository, do not invent a documentation architecture unless the user asks for one.
 - If the bug implies a broader product decision rather than a straightforward defect, surface the ambiguity instead of forcing a narrow technical fix.
+
+## Gotchas
+
+- **Deterministic Reproduction**: Not every defect is reproducible in a limited environment (e.g., race conditions, external API dependencies). Always document the blocking reason if a confirmation test cannot be created.
+- **Script Dependencies**: This skill relies on `scripts/verify-coverage.js` and `scripts/export-tracker-artifact.js`. If these are missing or return a non-zero exit code, automated validation and export steps will fail.
+- **Approval Ambiguity**: The `approved-fix` path should only be taken when there is clear intent from the user. Automating fixes for unconfirmed tracker issues can result in unintended side effects.
+- **Test Layer Gaps**: This skill prefers the repository's native test stack. If the repository has no tests, the agent will attempt to add minimal safety but may miss broader regression risks.
 
 ## Resource Map
 
