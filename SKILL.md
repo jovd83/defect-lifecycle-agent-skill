@@ -4,6 +4,14 @@ description: Use when Codex must report a newly discovered defect, implement an 
 metadata:
   author: jovd83
   version: "2.1.0"
+  dispatcher-category: testing
+  dispatcher-capabilities: defect-lifecycle, confirmation-test-orchestration, bug-fix-reporting
+  dispatcher-accepted-intents: triage_defect, fix_approved_defect, orchestrate_defect_resolution
+  dispatcher-input-artifacts: user_bug_report, tracker_ticket, failing_test, repo_context
+  dispatcher-output-artifacts: bug_discovery_report, bug_fix_report, verification_summary, routing_request
+  dispatcher-stack-tags: repository-native, testing
+  dispatcher-risk: high
+  dispatcher-writes-files: true
 ---
 
 # Bug Fix Lifecycle
@@ -26,6 +34,23 @@ Use this skill to move a defect from intake through verified resolution without 
 - Do not patch code before you have either reproduced the failure or explained precisely why deterministic reproduction is currently blocked.
 - Do not treat global line coverage alone as proof of adequate regression safety.
 - Do not create persistent shared-memory behavior inside this skill. Shared memory belongs behind an external integration boundary such as a dedicated shared-memory skill.
+
+## Dispatcher Integration
+
+Use `skill-dispatcher` as the primary integration layer whenever this skill needs help from another skill.
+
+- Prefer dispatching by intent rather than naming a sibling skill directly.
+- Prefer the repository's native test stack over an organization-wide default.
+- Use shared memory only for stable cross-project routing policy, not for task-local routing.
+- Treat direct skill paths as a fallback only when the dispatcher has no valid registry match.
+
+Common downstream intents:
+
+- `design_confirmation_tests`
+- `render_test_artifact`
+- `implement_ui_confirmation_test`
+- `generate_test_data`
+- `review_automation_quality`
 
 ## Inputs To Confirm Or Infer
 
@@ -82,9 +107,11 @@ Use this path when the bug is ready to be fixed.
 1. Reproduce or otherwise verify the failure with evidence.
 2. Identify the requirement gap, documentation gap, or assumption gap that allowed the defect.
 3. Create a focused confirmation test that fails for the current bug when practical.
+   If this requires specialist help, dispatch `design_confirmation_tests` first and `render_test_artifact` only when a rendered artifact is actually required.
 4. Explain why the existing tests or monitoring failed to catch the problem.
 5. Implement the minimal credible fix.
 6. Re-run the confirmation test and a right-sized regression set.
+   When browser automation is needed, dispatch `implement_ui_confirmation_test` and prefer the repository-native stack.
 7. Validate coverage with `node scripts/verify-coverage.js` when a JSON summary is available.
 8. Update docs only where the bug changed user-visible behavior, developer contracts, or operator expectations.
 9. Read [assets/bug-fix-report-template.md](assets/bug-fix-report-template.md) and [references/response-contracts.md](references/response-contracts.md).
