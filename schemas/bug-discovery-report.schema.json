@@ -1,6 +1,6 @@
 ﻿{
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://agentskills.io/schemas/bug-fix-lifecycle/discovery-report.schema.json",
+  "$id": "https://agentskills.io/schemas/defect-lifecycle-agent-skill/discovery-report.schema.json",
   "title": "Bug Discovery Report",
   "type": "object",
   "additionalProperties": false,

@@ -1,6 +1,6 @@
 ﻿{
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://agentskills.io/schemas/bug-fix-lifecycle/fix-report.schema.json",
+  "$id": "https://agentskills.io/schemas/defect-lifecycle-agent-skill/fix-report.schema.json",
   "title": "Bug Fix Resolution Report",
   "type": "object",
   "additionalProperties": false,

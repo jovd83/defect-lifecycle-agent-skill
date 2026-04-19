@@ -1,4 +1,10 @@
-﻿# Changelog
+# Changelog
+
+## 2.2.0 - 2026-04-19
+
+- aligned the skill frontmatter and trigger with the canonical `defect-lifecycle-agent-skill` identity
+- synced public docs, schema identifiers, and validation metadata with the canonical repository
+- confirmed `jovd83/defect-lifecycle-agent-skill` as the active source of truth before retiring the legacy private repo
 
 ## 2.1.0 - 2026-03-21
 

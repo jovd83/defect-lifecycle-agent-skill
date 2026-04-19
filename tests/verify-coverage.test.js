@@ -58,7 +58,7 @@ test("validateCoverage fails for scoped files under threshold", () => {
 });
 
 test("resolveConfig merges manifest defaults", () => {
-  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "bug-fix-lifecycle-"));
+  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "defect-lifecycle-agent-skill-"));
   const manifestPath = path.join(tempDir, "coverage-manifest.json");
   fs.writeFileSync(
     manifestPath,

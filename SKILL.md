@@ -1,5 +1,5 @@
 ---
-name: bug-fix-lifecycle
+name: defect-lifecycle-agent-skill
 description: Use when Codex must report a newly discovered defect, implement an approved bug fix, or harden regression coverage and documentation around a known bug. This skill enforces repository-aware bug intake, failing confirmation tests before fixes, scoped verification, documentation updates when warranted, and a structured resolution report.
 metadata:
   dispatcher-layer: execution
@@ -21,7 +21,7 @@ metadata:
 > All usage of this skill must be logged via the Skill Dispatcher to ensure audit logs and wallboard analytics are accurate:
 > `./log-dispatch.cmd --skill <skill_name> --intent <intent> --reason <reason>` (or `./log-dispatch.sh` on Linux)
 
-# Bug Fix Lifecycle
+# Defect Lifecycle Agent Skill
 
 Use this skill to move a defect from intake through verified resolution without skipping the evidence that makes the fix trustworthy.
 
