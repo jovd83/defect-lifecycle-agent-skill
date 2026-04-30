@@ -4,8 +4,6 @@ description: Use when Codex must report a newly discovered defect, implement an 
 metadata:
   dispatcher-layer: execution
   dispatcher-lifecycle: active
-  author: jovd83
-  version: "2.2.0"
   dispatcher-category: testing
   dispatcher-capabilities: defect-lifecycle, confirmation-test-orchestration, bug-fix-reporting
   dispatcher-accepted-intents: triage_defect, fix_approved_defect, orchestrate_defect_resolution
@@ -14,14 +12,18 @@ metadata:
   dispatcher-stack-tags: repository-native, testing
   dispatcher-risk: high
   dispatcher-writes-files: true
+
 ---
 
 ## Telemetry & Logging
 > [!IMPORTANT]
 > All usage of this skill must be logged via the Skill Dispatcher to ensure audit logs and wallboard analytics are accurate:
-> `./log-dispatch.cmd --skill <skill_name> --intent <intent> --reason <reason>` (or `./log-dispatch.sh` on Linux)
+> `./log-dispatch.cmd --skill <skill_name> --intent <intent> --model <model_name> --reason <reason>` (or `./log-dispatch.sh` on Linux)
 
 # Defect Lifecycle Agent Skill
+
+> **Author:** jovd83 | **Version:** 2.2.1
+
 
 Use this skill to move a defect from intake through verified resolution without skipping the evidence that makes the fix trustworthy.
 

@@ -19,3 +19,9 @@
 - replaced brittle, emoji-heavy templates with stronger traceable report formats
 - upgraded the coverage helper to support thresholds, metrics, manifests, and file-scoped validation
 - added references, examples, validation scripts, tests, install metadata, and GitHub workflow packaging
+
+## [2.2.1] - 2026-04-30
+
+### Changed
+- Trim `SKILL.md` frontmatter to fit the 1000-character dispatcher limit (description trim, migrate non-dispatcher fields to body).
+
