@@ -1,5 +1,5 @@
 [![Validate Skills](https://github.com/jovd83/defect-lifecycle-agent-skill/actions/workflows/ci.yml/badge.svg)](https://github.com/jovd83/defect-lifecycle-agent-skill/actions/workflows/ci.yml)
-[![version](https://img.shields.io/badge/version-2.2.0-blue)](CHANGELOG.md)
+[![version](https://img.shields.io/badge/version-2.2.1-blue)](CHANGELOG.md)
 [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![Buy Me a Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-ffdd00?style=flat&logo=buy-me-a-coffee&logoColor=black)](https://buymeacoffee.com/jovd83)
 
@@ -43,6 +43,26 @@ The skill helps an agent:
 - claim regression safety from total line coverage alone
 - bypass approval for tracker bugs that are not clearly ready to fix
 - embed direct Jira or Linear API clients, secrets, or auth flows
+
+## Orchestrator Chain Integration
+
+When invoked through `skill-orchestrator`, this skill runs as an 11-phase chain defined in `config/chain_definition.json`. The test type for the confirmation test is determined by `test-design-orchestrator` (Phase 2) — all test implementation phases self-gate on that output:
+
+| Phase | Sub-skill | Maps to |
+|:------|:----------|:--------|
+| 1 | `codebase-context` | Discover repo conventions and all test layers |
+| 2 | `test-design-orchestrator` | Determine test type(s): unit / service / frontend / perf / security |
+| 3 | `stack-aware-unit-testing-skill` | Unit confirmation test [self-gates] |
+| 4 | `api-contract-sentinel` | Service/API confirmation test [self-gates] |
+| 5 | `playwright-skill` | Frontend/E2E confirmation test [self-gates] |
+| 6 | `performance-testing-skill` | Performance confirmation test [self-gates] |
+| 7 | `defensive-appsec-review-skill` | Security confirmation test [self-gates] |
+| 8 | [agent-handled] | Implement the minimal fix |
+| 9 | `stack-aware-unit-testing-skill` | Re-run confirmation tests + full regression |
+| 10 | `automated-test-reviewer` | Review why tests missed it; verify coverage |
+| 11 | [agent-handled] | Structured 7-section resolution report |
+
+Self-gating phases declare themselves "not applicable" when the bug type doesn't match their layer, so a pure logic bug skips phases 4–7 automatically.
 
 ## Repository Layout
 

@@ -1,0 +1,114 @@
+{
+  "_comment": "Chain for bug-fix-lifecycle. Test type determined by test-design-orchestrator (Phase 2). All test impl phases self-gate on that output.",
+  "chain_name": "bug-fix-lifecycle",
+  "description": "Repo discovery -> test approach design -> [unit|service|frontend|perf|security] confirmation -> fix -> regression -> coverage review -> report",
+  "phases": [
+    {
+      "id": "repo_discovery",
+      "name": "Step 2 - Discover repository conventions and test landscape",
+      "skill": "codebase-context",
+      "intent": "discover_repo_conventions",
+      "reason": "Inspect all test layers (unit/integration/API/browser/perf), CI setup, and conventions before any decisions",
+      "risk": "low",
+      "pass_context_forward": true
+    },
+    {
+      "id": "test_approach_design",
+      "name": "Step 3a - Design confirmation test approach and determine test type(s)",
+      "skill": "test-design-orchestrator",
+      "intent": "design_confirmation_tests",
+      "reason": "Determine WHICH test layer(s) prove the defect: unit, service/API, frontend/E2E, performance, security, or combination. Output must name the test type(s) explicitly - downstream phases gate on this.",
+      "risk": "medium",
+      "pass_context_forward": true
+    },
+    {
+      "id": "unit_confirmation_test",
+      "name": "Step 3b - Unit confirmation test",
+      "skill": "stack-aware-unit-testing-skill",
+      "intent": "implement_confirmation_test",
+      "reason": "Implement unit confirmation test that proves the defect. Must fail before fix is written.",
+      "risk": "medium",
+      "pass_context_forward": false,
+      "query_suffix": "Read the test design output from Phase 2 carefully. Only implement this phase if unit tests were identified as a needed layer for confirming this bug. If the primary layer is service, frontend, performance, or security - and not unit tests - state exactly: 'unit confirmation test: not applicable for this bug type' and stop."
+    },
+    {
+      "id": "service_confirmation_test",
+      "name": "Step 3c - Service and API confirmation test",
+      "skill": "api-contract-sentinel",
+      "intent": "validate_api_contracts",
+      "reason": "Implement service-level or API contract confirmation test proving the defect at the integration boundary.",
+      "risk": "medium",
+      "pass_context_forward": false,
+      "query_suffix": "Read the test design output from Phase 2. Only implement this phase if service tests, API tests, or contract tests were identified as a needed layer. If the bug is a pure unit-level logic error or a UI bug with no API involvement, state: 'service confirmation test: not applicable for this bug type' and stop."
+    },
+    {
+      "id": "frontend_confirmation_test",
+      "name": "Step 3d - Frontend and E2E confirmation test",
+      "skill": "playwright-skill",
+      "intent": "implement_ui_confirmation_test",
+      "reason": "Implement browser-level or E2E confirmation test proving the defect in the user-facing flow. Use the native browser test framework discovered in Phase 1.",
+      "risk": "medium",
+      "pass_context_forward": false,
+      "query_suffix": "Read the test design output from Phase 2. Only implement this phase if frontend, browser, or E2E tests were identified as a needed layer. If the bug has no user-facing or browser-observable manifestation, state: 'frontend confirmation test: not applicable for this bug type' and stop."
+    },
+    {
+      "id": "performance_confirmation_test",
+      "name": "Step 3e - Performance confirmation test",
+      "skill": "performance-testing-skill",
+      "intent": "design_performance_tests",
+      "reason": "Implement a performance or load test proving the defect causes measurable latency, throughput, or resource regression.",
+      "risk": "medium",
+      "pass_context_forward": false,
+      "query_suffix": "Read the test design output from Phase 2. Only implement this phase if performance degradation, latency regression, or resource exhaustion was identified as the bug category. If this is a logic, data, or UI bug with no performance dimension, state: 'performance confirmation test: not applicable for this bug type' and stop."
+    },
+    {
+      "id": "security_confirmation_test",
+      "name": "Step 3f - Security confirmation test",
+      "skill": "defensive-appsec-review-skill",
+      "intent": "security_review",
+      "reason": "Confirm the security vulnerability with a targeted test or static analysis before the fix is written.",
+      "risk": "high",
+      "pass_context_forward": false,
+      "query_suffix": "Read the test design output from Phase 2. Only run this phase if the bug was classified as a security vulnerability (injection, auth bypass, authz flaw, data exposure, etc.). If the bug has no security dimension, state: 'security confirmation test: not applicable for this bug type' and stop. Produce a static analysis finding or safe proof-of-concept only - do not attempt to exploit any live system."
+    },
+    {
+      "id": "implement_fix",
+      "name": "Step 4 - Implement the minimal fix",
+      "skill": null,
+      "intent": "implement_fix",
+      "reason": "Agent implements the minimal fix. No unrelated changes. All confirmation tests from Steps 3b-3f must pass after this.",
+      "risk": "high",
+      "pass_context_forward": false,
+      "_note": "Agent-handled."
+    },
+    {
+      "id": "regression_run",
+      "name": "Step 5 - Re-run confirmation tests and full regression suite",
+      "skill": "stack-aware-unit-testing-skill",
+      "intent": "run_regression_tests",
+      "reason": "Run all confirmation tests from Steps 3b-3f (must now pass) plus the full regression suite across all active test layers.",
+      "risk": "medium",
+      "pass_context_forward": true
+    },
+    {
+      "id": "coverage_review",
+      "name": "Step 6 - Review why bug slipped through and verify coverage across all layers",
+      "skill": "automated-test-reviewer",
+      "intent": "review_automation_quality",
+      "reason": "Explain which test layer failed to catch the defect and why. Verify coverage across every active layer: unit, service, frontend, performance, security.",
+      "risk": "low",
+      "pass_context_forward": false
+    },
+    {
+      "id": "resolution_report",
+      "name": "Step 7 - Deliver structured resolution report",
+      "skill": null,
+      "intent": "deliver_bug_fix_report",
+      "reason": "Produce structured fix report using all chain evidence",
+      "risk": "low",
+      "pass_context_forward": false,
+      "query_suffix": "Produce the structured bug fix resolution report with these sections:\n1. What failed and who was affected\n2. How expected behavior was validated (source of truth used)\n3. Which test layer(s) were used to confirm the defect and why\n4. Why existing tests in those layers failed to catch the bug\n5. What changed in code, tests, and docs\n6. What was validated after the fix (results per layer, coverage)\n7. Residual risks or out-of-scope follow-up items\nBase every claim on evidence from the previous chain phases.",
+      "_note": "Agent-handled."
+    }
+  ]
+}
